@@ -1,6 +1,4 @@
 package Task;
-import Questions.*;
-
 import java.util.Scanner;
 
 
@@ -11,75 +9,66 @@ public class Task {
 
     private int id;
     private int Score = 0;
-
-    private SetUpGame Game;
+    private String Question, answer_A, answer_B, answer_C, answer_D, Answer;
 
     public void compute() {
 
 
-
-        try{
-            Game = new SetUpGame();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-
-        int numQuestions = Game.getQuestions_Queue().size();
-        int rounds = 1;
-        int points = 0;
-        boolean quit = false;
-
         Scanner scanner = new Scanner(System.in);
 
 
-        System.out.println("Select a Choice of A,B,C or D. Enter q to Quit the Game \n");
+        System.out.println("Select a Choice of A,B,C or D.\n");
 
-        while(Game.getQuestions_Queue().size() > 0 && !quit) {  //  run while there are items in the Queue
+        System.out.println(toString());
 
-            Questions temp = Game.getQuestions_Queue().poll(); // pulls a question to be us// ed
+        String res = scanner.next(); // gets client response for the question
 
-            System.out.println((temp.toString())); // sends the question to the client
-
-            String res = scanner.next(); // gets client response for the question
-
-            // checks if a user wants to quit the program
-            if (res.equalsIgnoreCase("q")) {
-                System.out.println("points : " + points + "\n");
-                setScore(points);
-                quit = true;
-            }else{
-                // checking if the answer to the question is correct or wrong
-                if (Game.Answer(temp, res)) {
-                    System.out.println("Correct!!" + "\n");
-
-                    // allocating points based on how the questions were answered
-                    if (rounds <= numQuestions){
-                        points += 10; // for getting it correct the first time
-                    }else{
-                        points += 5; // for getting it correct any other time
-                    }
-                    setScore(points);
-                    rounds++; // amount of questions asked
-                } else {
-                    System.out.println("Wrong!!" + "\n");
-                    // adding the question that was wrong back in the queue
-                    Game.getQuestions_Queue().add(temp);
-                    rounds++;
-                }
-            }
-
+        if(Answer(res)){
+            Score = 10;
+            System.out.println("Correct!");
+        } else{
+            Score = 0;
+            System.out.println("Wrong!");
         }
-        // checking if there are no more questions to send to the client
-        if (Game.getQuestions_Queue().size() <= 0) {
-            System.out.println("points :" + points +" NO MORE QUESTIONS\n");
-            setScore(points);
-        }else{
-            System.out.println("Error!!"); // While and IF statement fail
-        }
-
-
-
     }
+
+    public String toString(){
+        String str = "";
+        str += getQuestion() + "\n";
+        str += "A)" + getAnswer_A() + "\n";
+        str += "B)" + getAnswer_B() + "\n";
+        str += "C)" + getAnswer_C() + "\n";
+        str += "D)" + getAnswer_D() + "\n";
+        return str;
+    }
+
+    // takes in the Question and the Answer which can be A,B,C or D
+    public boolean Answer(String Answer){
+
+        if (Answer.equalsIgnoreCase("A")){
+            return checkAnswer(getAnswer_A());
+        }
+        else  if (Answer.equalsIgnoreCase("B")){
+            return checkAnswer(getAnswer_B());
+        }
+        else  if (Answer.equalsIgnoreCase("C")){
+            return checkAnswer(getAnswer_C());
+        }
+        else if (Answer.equalsIgnoreCase("D")){
+            return checkAnswer(getAnswer_D());
+        }else {
+            return false;
+        }
+    }
+
+    public boolean checkAnswer(String str){
+        if (str.equalsIgnoreCase(getAnswer())){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
 
 
 
@@ -105,4 +94,53 @@ public class Task {
     public void setScore(int score) {
         Score = score;
     }
+
+    public String getQuestion() {
+        return Question;
+    }
+
+    public void setQuestion(String question) {
+        Question = question;
+    }
+
+    public String getAnswer_A() {
+        return answer_A;
+    }
+
+    public void setAnswer_A(String answer_A) {
+        this.answer_A = answer_A;
+    }
+
+    public String getAnswer_B() {
+        return answer_B;
+    }
+
+    public void setAnswer_B(String answer_B) {
+        this.answer_B = answer_B;
+    }
+
+    public String getAnswer_C() {
+        return answer_C;
+    }
+
+    public void setAnswer_C(String answer_C) {
+        this.answer_C = answer_C;
+    }
+
+    public String getAnswer_D() {
+        return answer_D;
+    }
+
+    public void setAnswer_D(String answer_D) {
+        this.answer_D = answer_D;
+    }
+
+    public String getAnswer() {
+        return Answer;
+    }
+
+    public void setAnswer(String answer) {
+        Answer = answer;
+    }
+
 }

@@ -37,33 +37,33 @@ public class SetUpGame {
     }
 
 
-    // takes in the Question and the Answer which can be A,B,C or D
-    public boolean Answer(Questions Q,String Answer){
-
-        if (Answer.equalsIgnoreCase("A")){
-            return checkAnswer(Q,Q.getAnswer_A());
-        }
-        else  if (Answer.equalsIgnoreCase("B")){
-            return checkAnswer(Q,Q.getAnswer_B());
-        }
-        else  if (Answer.equalsIgnoreCase("C")){
-            return checkAnswer(Q,Q.getAnswer_C());
-        }
-        else if (Answer.equalsIgnoreCase("D")){
-            return checkAnswer(Q,Q.getAnswer_D());
-        }else {
-            return false;
-        }
-    }
-
-    // compares the answer for the question with the answer the user selects
-    public boolean checkAnswer(Questions Q, String Answer){
-        if (Q.getAnswer().equalsIgnoreCase(Answer)){
-            return true;
-        }else {
-            return false;
-        }
-    }
+//    // takes in the Question and the Answer which can be A,B,C or D
+//    public boolean Answer(Questions Q,String Answer){
+//
+//        if (Answer.equalsIgnoreCase("A")){
+//            return checkAnswer(Q,Q.getAnswer_A());
+//        }
+//        else  if (Answer.equalsIgnoreCase("B")){
+//            return checkAnswer(Q,Q.getAnswer_B());
+//        }
+//        else  if (Answer.equalsIgnoreCase("C")){
+//            return checkAnswer(Q,Q.getAnswer_C());
+//        }
+//        else if (Answer.equalsIgnoreCase("D")){
+//            return checkAnswer(Q,Q.getAnswer_D());
+//        }else {
+//            return false;
+//        }
+//    }
+//
+//    // compares the answer for the question with the answer the user selects
+//    public boolean checkAnswer(Questions Q, String Answer){
+//        if (Q.getAnswer().equalsIgnoreCase(Answer)){
+//            return true;
+//        }else {
+//            return false;
+//        }
+//    }
 
 
 

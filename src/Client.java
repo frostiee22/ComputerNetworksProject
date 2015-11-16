@@ -14,8 +14,6 @@ import java.util.Scanner;
 
 public class Client {
 
-   // public static final DBConnection DB = new DBConnection();
-
 
     private static final int DEFAULT_PORT = 13572;
     private static final String CLOSE_CONNECTION_COMMAND = "close";
@@ -59,6 +57,10 @@ public class Client {
 
     }
 
+    private static String RemoveUnderscore(String str){
+        return str.replaceAll("_"," ");
+    }
+
 
     private static Task readTask(String taskData) throws IOException {
         try {
@@ -66,6 +68,12 @@ public class Client {
             Task task = new Task();
             scanner.next();
             task.setId(scanner.nextInt());
+            task.setQuestion(RemoveUnderscore(scanner.next()));
+            task.setAnswer_A(RemoveUnderscore(scanner.next()));
+            task.setAnswer_B(RemoveUnderscore(scanner.next()));
+            task.setAnswer_C(RemoveUnderscore(scanner.next()));
+            task.setAnswer_D(RemoveUnderscore(scanner.next()));
+            task.setAnswer(RemoveUnderscore(scanner.next()));
             return task;
         } catch (Exception e) {
             throw new IOException("Illegal data found while reading task information.");
