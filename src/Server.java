@@ -1,29 +1,37 @@
+import GUIwindows.AlertBox;
 import Questions.Questions;
 import Questions.SetUpGame;
 import Task.Task;
-import GUIwindows.*;
+
 import javafx.application.Application;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.concurrent.Service;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.Socket;
-import java.util.Scanner;
+import java.net.UnknownHostException;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Server extends Application {
 
     Stage window;
-    Scene scene;
-    Button button;
+    Scene scene, scene2;
+
 
     private static final int DEFAULT_PORT = 13572;
     private static String networkAddress;
@@ -37,6 +45,8 @@ public class Server extends Application {
     private static int taskCompleted = 0;
 
     private static int[] SCORES = new int[257];
+    //private static Queue<Integer> addresses = new LinkedList<Integer>();
+    private static ArrayList<Integer> addresses = new ArrayList<Integer>();
 
     public static long startTime;
 
@@ -50,7 +60,7 @@ public class Server extends Application {
         window.setTitle("Server Application");
 
         GridPane grid = new GridPane();
-        grid.setPadding(new Insets(10,10,10,10));
+        grid.setPadding(new Insets(10, 10, 10, 10));
         grid.setVgap(8);
         grid.setHgap(10);
 
@@ -65,63 +75,178 @@ public class Server extends Application {
         GridPane.setConstraints(ipInput, 0, 1);
 
 
+        // start ip label
+        Label startIPlabel = new Label("start ip");
+        GridPane.setConstraints(startIPlabel, 1, 0);
+
+        // ip input
+        TextField start = new TextField();
+        start.setPromptText("100");
+        start.setMaxSize(50, 10);
+        GridPane.setConstraints(start, 1, 1);
+
+        // end ip label
+        Label endIPlabel = new Label("end ip");
+        GridPane.setConstraints(endIPlabel, 2, 0);
+
+        // ip input
+        TextField end = new TextField();
+        end.setPromptText("110");
+        end.setMaxSize(50, 10);
+        GridPane.setConstraints(end, 2, 1);
+
+
+
+
+        GridPane grid2 = new GridPane();
+        grid2.setPadding(new Insets(10, 10, 10, 10));
+        grid2.setVgap(8);
+        grid2.setHgap(10);
+
+        Button button2 = new Button("go back");
+        button2.setOnAction(e -> window.setScene(scene));
+        GridPane.setConstraints(button2, 0, 0);
+
+        Label questiontext = new Label("Results");
+        GridPane.setConstraints(questiontext, 0, 1);
+        questiontext.textProperty().bind(new SimpleStringProperty());
+
+        grid2.getChildren().addAll(button2,questiontext);
+        scene2 = new Scene(grid2, 600, 300);
+
+
+
         //button
-        Button startServer = new Button("Start");
-        GridPane.setConstraints(startServer,0,2);
-        startServer.setOnAction(e -> LaunchServer(ipInput));
+        Button startServer = new Button("Launch Server");
+        GridPane.setConstraints(startServer, 0, 4 );
+        startServer.setOnAction(e -> ServerRun(ipInput, start, end,window, scene2, questiontext));
 
 
-        grid.getChildren().addAll(ipLabel,ipInput,startServer);
+        //button
+        Button Results = new Button("View Results");
+        GridPane.setConstraints(Results, 1, 4);
+        Results.setOnAction(e -> window.setScene(scene2));
 
-        scene = new Scene(grid, 250, 150);
+
+
+        grid.getChildren().addAll(ipLabel, ipInput, startIPlabel, start, endIPlabel, end, startServer,Results);
+
+        scene = new Scene(grid, 400, 150);
         window.setScene(scene);
 
         window.show();
 
     }
 
-    public static boolean CheckString(String str){
-        int needed = 3,amt =0;
-        for (int i=0;i<str.length();i++){
-            if (str.charAt(i) == '.'){
+    public static void ServerRun(TextField tf, TextField start, TextField end,Stage window,Scene scene, Label label){
+        window.setScene(scene);
+        // Application thread
+        Service<Void> application = new Service<Void>() {
+            @Override
+            protected javafx.concurrent.Task<Void> createTask() {
+                return new javafx.concurrent.Task<Void>() {
+                    @Override
+                    protected Void call() throws Exception {
+                        LaunchServer(tf, start, end, label);
+                        return null;
+                    }
+                };
+            }
+        };
+
+
+
+        // Results thread
+        Service<Void> results = new Service<Void>() {
+            @Override
+            protected javafx.concurrent.Task<Void> createTask() {
+                return new javafx.concurrent.Task<Void>() {
+                    @Override
+                    protected Void call() throws Exception {
+                        while(true) {
+                            updateMessage(PrintResults(label));
+                            Thread.sleep(1000);
+                        }
+                    }
+                };
+            }
+        };
+
+        label.textProperty().bind(results.messageProperty());
+
+        results.restart();
+        application.restart();
+
+
+    }
+
+    public static boolean CheckString(String str) {
+        int needed = 3, amt = 0;
+        for (int i = 0; i < str.length(); i++) {
+            if (str.charAt(i) == '.') {
                 amt++;
             }
         }
-        if (needed == amt){
+        if (needed == amt) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
 
-    public static void LaunchServer(TextField tf) {
+    public static void LaunchServer(TextField tf, TextField start, TextField end, Label label) {
         networkAddress = tf.getText();
-        if (networkAddress.equals("") || !CheckString(networkAddress) ){
-            AlertBox.display("Error!!","Wrong IP Address");
-        }else {
+        if (networkAddress.equals("") || !CheckString(networkAddress)) {
+            AlertBox.display("Error!!", "Wrong IP Address");
+        } else {
 
             startTime = System.currentTimeMillis();
 
             createJob();
-            int amt = 255;
 
-            WorkerConnection[] workers = new WorkerConnection[amt + 2];
-
-            String localnetIPS = networkAddress;
-            for (int i = 0; i <= amt; i++) {
-                workers[i] = new WorkerConnection(i + 1, localnetIPS + i, DEFAULT_PORT, i);
+            int startip, endip;
+            try {
+                startip = Integer.parseInt(start.getText());
+                endip = Integer.parseInt(end.getText());
+            }catch(NumberFormatException e){
+                startip = 1;
+                endip = 254;
+                AlertBox.display("Error!!", "not a valid number\n using default start and end");
             }
 
-            for (int i = 0; i <= amt; i++) {
+
+            int amt = endip;
+
+            WorkerConnection[] workers = new WorkerConnection[amt + 2];
+            int inc = 0;
+            String localnetIPS = networkAddress;
+            for (int i = startip; i <= amt; i++) {
+                boolean inet = false;
+//                try {
+                    System.out.println(networkAddress + i);
+                    //inet = InetAddress.getByName(networkAddress + i).isReachable(15000);
+                    //if (inet == true) {
+                        workers[inc] = new WorkerConnection(inc + 1, localnetIPS + i, DEFAULT_PORT, i);
+                        inc++;
+
+                    //}
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+            }
+
+            for (int i = 0; i < inc; i++) {
                 while (workers[i].isAlive()) {
                     try {
+
                         workers[i].join();
                     } catch (InterruptedException e) {
 
                     }
                 }
             }
+
 
 //            if (taskCompleted != NUM_JOBS) {
 //                System.out.println("Something went wrong. Only " + taskCompleted);
@@ -131,20 +256,36 @@ public class Server extends Application {
 
             long elapsedTime = System.currentTimeMillis() - startTime;
             System.out.println("Finish in " + (elapsedTime / 1000.0) + " seconds");
-            PrintResults();
+
+            //PrintResults(label);
+
+
+
         }
 
     }
 
-    private static void PrintResults() {
-        String str ="";
+    private static String PrintResults(Label l) {
+        int size = addresses.size();
+        Iterator<Integer> iter = addresses.iterator();
+        String str = "";
         str += "=======> SCORES <=======\n";
-        for (int i = 0; i < 257; i++) {
-            if (SCORES[i] > 0) {
-                str += (networkAddress + i + ") " + SCORES[i]) + "\n";
-            }
+
+        while(iter.hasNext()){
+            Integer j = iter.next();
+            str += (networkAddress + j.intValue() + ") " + SCORES[j.intValue()]) + "\n";
         }
-        AlertBox.display("Results",str);
+
+
+
+//        for (int i = 0; i < size; i++) {
+//            int j = addresses.poll();
+//            str += (networkAddress + j + ") " + SCORES[j]) + "\n";
+//        }
+        //l.textProperty().bind(new SimpleStringProperty(str));
+        //AlertBox.display("Results", str);
+        return str;
+
     }
 
 
@@ -232,6 +373,7 @@ public class Server extends Application {
         String host;
         int port;
         int num;
+        Label l;
 
 
         WorkerConnection(int id, String host, int port, int num) {
@@ -243,11 +385,12 @@ public class Server extends Application {
         }
 
         public void run() {
-            int taskComplete = 0;
+            int taskCompleted = 0;
             Socket socket;
 
             try {
                 socket = new Socket(host, port);
+                addresses.add(num);
             } catch (Exception e) {
 //                System.out.println("Thread " + id + " could not open connection to " +
 //                        host + ":" + port);
@@ -284,7 +427,7 @@ public class Server extends Application {
                     }
                     readResults(resultsString, currentTask);
                     finishTask(currentTask);
-                    taskComplete++;
+                    taskCompleted++;
                     // saving the user scores
                     SCORES[num] += currentTask.getScore();
 
@@ -319,7 +462,6 @@ public class Server extends Application {
 
 
     }
-
 
 
 }
