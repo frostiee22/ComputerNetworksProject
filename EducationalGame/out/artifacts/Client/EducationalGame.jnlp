@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0" xmlns:jfx="http://javafx.com" href="EducationalGame.jnlp">
+  <information>
+    <title>GameClient</title>
+    <vendor>Unknown vendor</vendor>
+    <description>Sample JavaFX 2.0 application.</description>
+    <offline-allowed/>
+  </information>
+  <resources>
+    <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
+    <jar href="EducationalGame.jar" size="39912" download="eager" />
+  </resources>
+  <jfx:javafx-desc  width="600" height="400" main-class="Client"  name="Client" />
+  <update check="background"/>
+</jnlp>
