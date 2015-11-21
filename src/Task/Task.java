@@ -51,22 +51,14 @@ public class Task {
         else  if (Answer.equalsIgnoreCase("B")){
             return checkAnswer(getAnswer_B());
         }
-        else  if (Answer.equalsIgnoreCase("C")){
+        else if (Answer.equalsIgnoreCase("C")) {
             return checkAnswer(getAnswer_C());
-        }
-        else if (Answer.equalsIgnoreCase("D")){
-            return checkAnswer(getAnswer_D());
-        }else {
-            return false;
-        }
+        } else
+            return Answer.equalsIgnoreCase("D") && checkAnswer(getAnswer_D());
     }
 
     public boolean checkAnswer(String str){
-        if (str.equalsIgnoreCase(getAnswer())){
-            return true;
-        }else {
-            return false;
-        }
+        return str.equalsIgnoreCase(getAnswer());
     }
 
 

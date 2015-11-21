@@ -1,11 +1,9 @@
-import GUIwindows.AlertBox;
+
 import Questions.Questions;
 import Questions.SetUpGame;
 import Task.Task;
-
 import javafx.application.Application;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -13,18 +11,16 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.InetAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Scanner;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Server extends Application {
@@ -40,12 +36,12 @@ public class Server extends Application {
     private static final String SHUT_DOWN_COMMAND = "shutdown";
     private static final String TASK_COMMAND = "task";
     private static final String RESULTS_COMMAND = "results";
+    private static int  taskCompleted;
 
     private static ConcurrentLinkedQueue<Task> tasks;
-    private static int taskCompleted = 0;
 
     private static int[] SCORES = new int[257];
-    //private static Queue<Integer> addresses = new LinkedList<Integer>();
+
     private static ArrayList<Integer> addresses = new ArrayList<Integer>();
 
     public static long startTime;
@@ -109,17 +105,22 @@ public class Server extends Application {
 
         Label questiontext = new Label("Results");
         GridPane.setConstraints(questiontext, 0, 1);
-        questiontext.textProperty().bind(new SimpleStringProperty());
+
+
+
 
         grid2.getChildren().addAll(button2,questiontext);
-        scene2 = new Scene(grid2, 600, 300);
+        scene2 = new Scene(grid2, 400, 200);
 
 
+        // error messages
+        Label error = new Label("Error messages");
+        GridPane.setConstraints(error, 0, 5);
 
         //button
         Button startServer = new Button("Launch Server");
         GridPane.setConstraints(startServer, 0, 4 );
-        startServer.setOnAction(e -> ServerRun(ipInput, start, end,window, scene2, questiontext));
+        startServer.setOnAction(e -> ServerRun(ipInput, start, end, questiontext,error));
 
 
         //button
@@ -129,7 +130,9 @@ public class Server extends Application {
 
 
 
-        grid.getChildren().addAll(ipLabel, ipInput, startIPlabel, start, endIPlabel, end, startServer,Results);
+
+
+        grid.getChildren().addAll(ipLabel, ipInput, startIPlabel, start, endIPlabel, end, startServer,Results,error);
 
         scene = new Scene(grid, 400, 150);
         window.setScene(scene);
@@ -138,8 +141,7 @@ public class Server extends Application {
 
     }
 
-    public static void ServerRun(TextField tf, TextField start, TextField end,Stage window,Scene scene, Label label){
-        window.setScene(scene);
+    public static void ServerRun(TextField tf, TextField start, TextField end, Label label,Label error){
         // Application thread
         Service<Void> application = new Service<Void>() {
             @Override
@@ -147,10 +149,15 @@ public class Server extends Application {
                 return new javafx.concurrent.Task<Void>() {
                     @Override
                     protected Void call() throws Exception {
-                        LaunchServer(tf, start, end, label);
+                        Platform.runLater(new Runnable(){
+                            public void run(){
+                                LaunchServer(tf, start, end, error);
+                            }
+                        });
                         return null;
                     }
                 };
+
             }
         };
 
@@ -195,73 +202,96 @@ public class Server extends Application {
     }
 
 
-    public static void LaunchServer(TextField tf, TextField start, TextField end, Label label) {
-        networkAddress = tf.getText();
-        if (networkAddress.equals("") || !CheckString(networkAddress)) {
-            AlertBox.display("Error!!", "Wrong IP Address");
-        } else {
-
-            startTime = System.currentTimeMillis();
-
-            createJob();
-
-            int startip, endip;
-            try {
-                startip = Integer.parseInt(start.getText());
-                endip = Integer.parseInt(end.getText());
-            }catch(NumberFormatException e){
-                startip = 1;
-                endip = 254;
-                AlertBox.display("Error!!", "not a valid number\n using default start and end");
-            }
+    public static void LaunchServer(TextField tf, TextField start, TextField end, Label error) {
 
 
-            int amt = endip;
+        // Results thread
+        Service<Void> errorThread = new Service<Void>() {
+            @Override
+            protected javafx.concurrent.Task<Void> createTask() {
+                return new javafx.concurrent.Task<Void>() {
+                    @Override
+                    protected Void call() throws Exception {
 
-            WorkerConnection[] workers = new WorkerConnection[amt + 2];
-            int inc = 0;
-            String localnetIPS = networkAddress;
-            for (int i = startip; i <= amt; i++) {
-                boolean inet = false;
-//                try {
-                    System.out.println(networkAddress + i);
-                    //inet = InetAddress.getByName(networkAddress + i).isReachable(15000);
-                    //if (inet == true) {
-                        workers[inc] = new WorkerConnection(inc + 1, localnetIPS + i, DEFAULT_PORT, i);
-                        inc++;
+                        ///////////////////////////////////////////////////////////
 
-                    //}
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-            }
 
-            for (int i = 0; i < inc; i++) {
-                while (workers[i].isAlive()) {
-                    try {
+                        networkAddress = tf.getText();
+                        if (networkAddress.equals("") || !CheckString(networkAddress)) {
+                            updateMessage("wrong ip");
+                            return null;
+                        } else {
 
-                        workers[i].join();
-                    } catch (InterruptedException e) {
+                            startTime = System.currentTimeMillis();
+
+                            createJob();
+
+                            int startip, endip;
+                            try {
+                                startip = Integer.parseInt(start.getText());
+                            }catch(NumberFormatException e){
+                                startip = 1;
+                                updateMessage("Incorrect Start address");
+                                Thread.sleep(500);
+                            }
+                            try{
+                                endip = Integer.parseInt(end.getText());
+                            }catch(NumberFormatException e){
+                                endip = 254;
+                                updateMessage("Incorrect End address");
+                                Thread.sleep(500);
+                            }
+
+
+                            int amt = endip;
+
+                            WorkerConnection[] workers = new WorkerConnection[amt + 2];
+                            int inc = 0;
+                            for (int i = startip; i <= amt; i++) {
+                                try {
+                                    Socket socket = new Socket(networkAddress+i, DEFAULT_PORT);
+                                    if (socket.isConnected()){
+                                        System.out.println("connected to : " + networkAddress + i);
+                                        workers[inc] = new WorkerConnection(inc + 1, i,socket);
+                                        inc++;
+                                    }
+                                } catch (Exception e) {
+                                    System.out.println("Not Connected to :" + networkAddress+i);
+                                }
+                            }
+
+                            for (int i = 0; i < inc; i++) {
+                                while (workers[i].isAlive()) {
+                                    try {
+                                        workers[i].join();
+                                    } catch (InterruptedException e) {
+
+                                    }
+                                }
+                            }
+//                            if (taskCompleted != NUM_JOBS) {
+//                                System.out.println("Something went wrong. Only " + taskCompleted);
+//                                System.out.println("out of " + NUM_JOBS + " tasks were completed");
+//                                System.exit(1);
+//                            }
+
+                            long elapsedTime = System.currentTimeMillis() - startTime;
+                            System.out.println("Finish in " + (elapsedTime / 1000.0) + " seconds");
+
+                            //PrintResults(label);
+
+                        }
+
+                        ////////////////////////////////////////////////////////////
+                          return null;
 
                     }
-                }
+                };
             }
+        };
 
-
-//            if (taskCompleted != NUM_JOBS) {
-//                System.out.println("Something went wrong. Only " + taskCompleted);
-//                System.out.println("out of " + NUM_JOBS + " tasks were completed");
-//                System.exit(1);
-//            }
-
-            long elapsedTime = System.currentTimeMillis() - startTime;
-            System.out.println("Finish in " + (elapsedTime / 1000.0) + " seconds");
-
-            //PrintResults(label);
-
-
-
-        }
+        error.textProperty().bind(errorThread.messageProperty());
+        errorThread.restart();
 
     }
 
@@ -275,17 +305,7 @@ public class Server extends Application {
             Integer j = iter.next();
             str += (networkAddress + j.intValue() + ") " + SCORES[j.intValue()]) + "\n";
         }
-
-
-
-//        for (int i = 0; i < size; i++) {
-//            int j = addresses.poll();
-//            str += (networkAddress + j + ") " + SCORES[j]) + "\n";
-//        }
-        //l.textProperty().bind(new SimpleStringProperty(str));
-        //AlertBox.display("Results", str);
         return str;
-
     }
 
 
@@ -320,8 +340,6 @@ public class Server extends Application {
     }
 
     synchronized private static void finishTask(Task task) {
-        //System.out.println("Score obtain is : " + task.getScore());
-        //SCORES[task.getId()] += task.getScore();
         taskCompleted++;
     }
 
@@ -373,30 +391,20 @@ public class Server extends Application {
         String host;
         int port;
         int num;
-        Label l;
+        Socket socket;
 
 
-        WorkerConnection(int id, String host, int port, int num) {
+        WorkerConnection(int id, int num, Socket socket ) {
             this.id = id;
-            this.host = host;
-            this.port = port;
             this.num = num;
+            this.socket = socket;
             start();
         }
 
         public void run() {
             int taskCompleted = 0;
-            Socket socket;
-
-            try {
-                socket = new Socket(host, port);
-                addresses.add(num);
-            } catch (Exception e) {
-//                System.out.println("Thread " + id + " could not open connection to " +
-//                        host + ":" + port);
-//                System.out.println("   Error: " + e);
-                return;
-            }
+            //Socket socket;
+            addresses.add(num);
 
             Task currentTask = null;
             Task nextTask = null;
@@ -438,7 +446,7 @@ public class Server extends Application {
                 out.flush();
 
             } catch (Exception e) {
-                System.out.println("Thread " + id + " ending after completing " +
+                System.out.println("Client " + networkAddress+num + " ending after completing " +
                         taskCompleted + " task");
                 System.out.println("   Error: " + e);
                 e.printStackTrace();
@@ -451,7 +459,7 @@ public class Server extends Application {
                     reassignTask(nextTask);
                 }
             } finally {
-                System.out.println("Thread " + id + " ending after completing " + taskCompleted + " tasks");
+                System.out.println("Client " + networkAddress+num + " ending after completing " + taskCompleted + " tasks");
                 try {
                     socket.close();
                 } catch (Exception e) {
