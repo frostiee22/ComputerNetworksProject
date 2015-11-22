@@ -11,29 +11,56 @@ public class SetUpGame {
 
     private Queue<Questions> Questions_Queue = new LinkedList<Questions>();
 
-    public SetUpGame() throws IOException {
+    public SetUpGame(int type) throws IOException {
 
 
         // Open the file
-        FileInputStream fstream;
-        try{
-            fstream = new FileInputStream("Questions/Questions.txt");
-        }catch(FileNotFoundException fnf){
-            System.out.println(fnf);
-            // path used by ITELLIJ IDE
-            fstream = new FileInputStream("src/Questions/Questions.txt");
+        FileInputStream fstream = null;
+        if (type == 1){
+            try{
+                fstream = new FileInputStream("Questions/Questions.txt");
+            }catch(FileNotFoundException fnf){
+                System.out.println(fnf);
+                // path used by ITELLIJ IDE
+                fstream = new FileInputStream("src/Questions/Questions.txt");
+            }
+        }
+        else if(type == 2){
+            try{
+                fstream = new FileInputStream("Questions/networks.txt");
+            }catch(FileNotFoundException fnf){
+                System.out.println(fnf);
+                // path used by ITELLIJ IDE
+                fstream = new FileInputStream("src/Questions/networks.txt");
+            }
+        }
+        else if(type == 3){
+            try{
+                fstream = new FileInputStream("Questions/math.txt");
+            }catch(FileNotFoundException fnf){
+                System.out.println(fnf);
+                // path used by ITELLIJ IDE
+                fstream = new FileInputStream("src/Questions/math.txt");
+            }
+        }
+        else{
+            System.out.println("no file selected");
         }
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
-        String strLine;
-        //Read File Line By Line
-        while ((strLine = br.readLine()) != null){
-            // creating question objects from data in the file
-            Questions s = new Questions(strLine,br.readLine(),br.readLine(),br.readLine(),br.readLine(),br.readLine());
-            Questions_Queue.add(s); // adding the new questions to the Queue
+        if (fstream != null){
+            BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
+            String strLine;
+            //Read File Line By Line
+            while ((strLine = br.readLine()) != null){
+                // creating question objects from data in the file
+                Questions s = new Questions(strLine,br.readLine(),br.readLine(),br.readLine(),br.readLine(),br.readLine());
+                Questions_Queue.add(s); // adding the new questions to the Queue
+            }
+            //Close the input stream
+            br.close();
+        }else {
+            // Do nothing
         }
-        //Close the input stream
-        br.close();
     }
 
 

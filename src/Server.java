@@ -7,6 +7,7 @@ import javafx.concurrent.Service;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
@@ -108,22 +109,26 @@ public class Server extends Application {
         scene2 = new Scene(grid2, 400, 200);
 
 
+        ChoiceBox<String> choiceBox = new ChoiceBox<>();
+        choiceBox.setValue("Default");
+        choiceBox.getItems().addAll("Default","networks","math");
+        GridPane.setConstraints(choiceBox, 0, 4);
+
         // error messages
         Label error = new Label("Error messages");
-        GridPane.setConstraints(error, 0, 5);
+        GridPane.setConstraints(error, 0, 6);
 
         //button
         Button startServer = new Button("Launch Server");
-        GridPane.setConstraints(startServer, 0, 4 );
-        startServer.setOnAction(e -> ServerRun(ipInput, start, end, questiontext,error));
-
+        GridPane.setConstraints(startServer, 0, 5 );
+        startServer.setOnAction(e -> ServerRun(ipInput, start, end, questiontext,error,choiceBox));
 
         //button
         Button Results = new Button("View Results");
-        GridPane.setConstraints(Results, 1, 4);
+        GridPane.setConstraints(Results, 1, 5);
         Results.setOnAction(e -> window.setScene(scene2));
 
-        grid.getChildren().addAll(ipLabel, ipInput, startIPlabel, start, endIPlabel, end, startServer,Results,error);
+        grid.getChildren().addAll(ipLabel, ipInput, startIPlabel, start, endIPlabel, end,choiceBox, startServer,Results,error);
 
         scene = new Scene(grid, 400, 150);
         window.setScene(scene);
@@ -132,7 +137,7 @@ public class Server extends Application {
 
     }
 
-    public static void ServerRun(TextField tf, TextField start, TextField end, Label label,Label error){
+    public static void ServerRun(TextField tf, TextField start, TextField end, Label label,Label error ,ChoiceBox CB){
         // Application thread
         Service<Void> application = new Service<Void>() {
             @Override
@@ -142,7 +147,7 @@ public class Server extends Application {
                     protected Void call() throws Exception {
                         Platform.runLater(new Runnable(){
                             public void run(){
-                                LaunchServer(tf, start, end, error);
+                                LaunchServer(tf, start, end, error,CB);
                             }
                         });
                         return null;
@@ -188,8 +193,20 @@ public class Server extends Application {
         return needed == amt;
     }
 
+    public static int CBvalue(ChoiceBox<String> CB){
+        String topic = CB.getValue();
+        if (topic.equalsIgnoreCase("networks")){
+            return 2;
+        }
+        else if(topic.equalsIgnoreCase("math")){
+            return 3;
+        }else {
+            return 1;
+        }
+    }
 
-    public static void LaunchServer(TextField tf, TextField start, TextField end, Label error) {
+
+    public static void LaunchServer(TextField tf, TextField start, TextField end, Label error,ChoiceBox<String> CB) {
         // Results thread
         Service<Void> errorThread = new Service<Void>() {
             @Override
@@ -209,7 +226,7 @@ public class Server extends Application {
 
                             startTime = System.currentTimeMillis();
 
-                            createJob();
+                            createJob(CBvalue(CB));
 
                             int startip, endip;
                             try {
@@ -365,10 +382,10 @@ public class Server extends Application {
     }
 
 
-    private static void createJob() {
+    private static void createJob(int type) {
         SetUpGame Game;
         try {
-            Game = new SetUpGame();
+            Game = new SetUpGame(type);
             tasks = new ConcurrentLinkedQueue<Task>();
             NUM_JOBS = Game.getQuestions_Queue().size();
             for (int i = 0; i < NUM_JOBS; i++) {

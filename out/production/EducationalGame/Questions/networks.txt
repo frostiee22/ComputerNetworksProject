@@ -1,0 +1,72 @@
+A Computer Network is
+a collection of hardware components and computers
+interconnected by communication channels
+sharing resources and information
+all of the above
+all of the above
+Protocols are?
+a special set of rules that end points in a telecommunication connection use when they communicate
+physical communication channels used for transferring data
+logical communication channels for transferring data
+none of the above
+a special set of rules that end points in a telecommunication connection use when they communicate
+Packet Transmission Delay =
+2L(bits)/R(bits/sec)
+R(bits/sec)/L(bits)
+L(bits)/R(bits/sec)
+R(bits/sec)*L(bits)
+L(bits)/R(bits/sec)
+Which is a source of packet delay?
+Transmission Delay
+Queuing Delay
+Propagation Delay
+All of the above
+All of the above
+Which is NOT a part of the Internet Protocol Stack?
+Application Layer
+Link Layer
+Presentation Layer
+Network Layer
+Presentation Layer
+Each IP packet must contain
+Only a Source address
+Only a Destination address
+Source and Destination address
+Source or Destination address
+Source and Destination address
+______ provides a connection-oriented reliable service for sending messages
+TCP
+IP
+UDP
+All of the above
+TCP
+How many layers are in the TCP/IP model?
+4
+5
+6
+7
+4
+DNS is an abbreviation of
+Dynamic Name System
+Dynamic Network System
+Domain Name System
+Domain Network Service
+Domain Name System
+What does a Router do in a network?
+Forwards a packet to all outgoing links 
+Forwards a packet to the next free outgoing link
+Determines on which outgoing link a packet is to be forwarded
+Forwards a packet to all outgoing links except the originated link
+Determines on which outgoing link a packet is to be forwarded
+The Internet is an example of
+Cell switched network
+Circuit switched network
+Packet switched network
+All of the above
+Packet switched network
+What is the benefit of Networking?
+File sharing
+Easier access to resources
+Easier backups
+All of the above
+All of the above
