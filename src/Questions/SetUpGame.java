@@ -11,41 +11,19 @@ public class SetUpGame {
 
     private Queue<Questions> Questions_Queue = new LinkedList<Questions>();
 
-    public SetUpGame(int type) throws IOException {
+    public SetUpGame(String Topic) throws IOException {
 
 
         // Open the file
         FileInputStream fstream = null;
-        if (type == 1){
-            try{
-                fstream = new FileInputStream("Questions/Questions.txt");
+        try{
+                fstream = new FileInputStream("Questions/"+Topic+".txt");
             }catch(FileNotFoundException fnf){
                 System.out.println(fnf);
                 // path used by ITELLIJ IDE
-                fstream = new FileInputStream("src/Questions/Questions.txt");
+                fstream = new FileInputStream("src/Questions/"+Topic+".txt");
             }
-        }
-        else if(type == 2){
-            try{
-                fstream = new FileInputStream("Questions/networks.txt");
-            }catch(FileNotFoundException fnf){
-                System.out.println(fnf);
-                // path used by ITELLIJ IDE
-                fstream = new FileInputStream("src/Questions/networks.txt");
-            }
-        }
-        else if(type == 3){
-            try{
-                fstream = new FileInputStream("Questions/math.txt");
-            }catch(FileNotFoundException fnf){
-                System.out.println(fnf);
-                // path used by ITELLIJ IDE
-                fstream = new FileInputStream("src/Questions/math.txt");
-            }
-        }
-        else{
-            System.out.println("no file selected");
-        }
+
 
         if (fstream != null){
             BufferedReader br = new BufferedReader(new InputStreamReader(fstream));

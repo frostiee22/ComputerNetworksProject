@@ -1,25 +1,14 @@
-What is 2 * 3? 
-
+What is 2 * 3?
 4
-
 1
-
 6
-
 8
-
 6
-
 Is it true that a circle is :
-
 Round
-
 has 6 sides
-
 is not a shape
-
 has 2 sides
-
 Round
 What is 6/2?
 9

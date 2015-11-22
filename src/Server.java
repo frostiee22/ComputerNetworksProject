@@ -110,8 +110,8 @@ public class Server extends Application {
 
 
         ChoiceBox<String> choiceBox = new ChoiceBox<>();
-        choiceBox.setValue("Default");
-        choiceBox.getItems().addAll("Default","networks","math");
+        choiceBox.setValue("default");
+        choiceBox.getItems().addAll("default","network","math");
         GridPane.setConstraints(choiceBox, 0, 4);
 
         // error messages
@@ -193,18 +193,6 @@ public class Server extends Application {
         return needed == amt;
     }
 
-    public static int CBvalue(ChoiceBox<String> CB){
-        String topic = CB.getValue();
-        if (topic.equalsIgnoreCase("networks")){
-            return 2;
-        }
-        else if(topic.equalsIgnoreCase("math")){
-            return 3;
-        }else {
-            return 1;
-        }
-    }
-
 
     public static void LaunchServer(TextField tf, TextField start, TextField end, Label error,ChoiceBox<String> CB) {
         // Results thread
@@ -226,7 +214,7 @@ public class Server extends Application {
 
                             startTime = System.currentTimeMillis();
 
-                            createJob(CBvalue(CB));
+                            createJob(CB.getValue());
 
                             int startip, endip;
                             try {
@@ -382,10 +370,10 @@ public class Server extends Application {
     }
 
 
-    private static void createJob(int type) {
+    private static void createJob(String topic) {
         SetUpGame Game;
         try {
-            Game = new SetUpGame(type);
+            Game = new SetUpGame(topic);
             tasks = new ConcurrentLinkedQueue<Task>();
             NUM_JOBS = Game.getQuestions_Queue().size();
             for (int i = 0; i < NUM_JOBS; i++) {
