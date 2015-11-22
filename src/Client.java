@@ -13,6 +13,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import javafx.scene.media.AudioClip;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.io.BufferedReader;
@@ -32,6 +35,7 @@ public class Client extends Application{
 
     int Qnum = 1;
 
+    static String choice;
     static Label ruleLabel;
     static Label question;
     static Label option1;
@@ -40,6 +44,8 @@ public class Client extends Application{
     static Label option4;
     static Label result;
     static Label timeRemain;
+    static Label quitLabel;
+    static Label nextQ;
     static int time = 10;
     static Button buttonA, buttonB, buttonC, buttonD, quit;
 
@@ -56,6 +62,10 @@ public class Client extends Application{
     private static final String SHUT_DOWN_COMMAND = "shutdown";
     private static final String TASK_COMMAND = "task";
     private static final String RESULTS_COMMAND = "results";
+    private static final String RESULT_PLACEMENT = "placement";
+
+    private static int FinalScore = 0;
+    private static int Place;
 
     private static boolean shutdownCommandReceived;
 
@@ -75,6 +85,11 @@ public class Client extends Application{
     public void start(Stage primaryStage) throws Exception {
         // TODO Auto-generated method stub
 
+        //AudioClip backgroundClip = new AudioClip(getClass().getResource("/resources/sound/click.wav").toExternalForm());
+        AudioClip buttonClip = new AudioClip(getClass().getResource("/resources/sound/click.wav").toExternalForm());
+
+        Font.loadFont(getClass().getResource("/resources/font/ChalkDust.TTF").toExternalForm(), 10);
+
 
         window = primaryStage;
         window.setTitle("Client Application");
@@ -82,7 +97,8 @@ public class Client extends Application{
 
         //// Scene 2
         GridPane grid = new GridPane();
-        grid.setPadding(new Insets(10, 10, 10, 10));
+        grid.setId("pane");
+        grid.setPadding(new Insets(50, 50, 50, 50));
         grid.setVgap(8);
         grid.setHgap(10);
         ruleLabel = new Label("Please select a choice: ");
@@ -91,6 +107,8 @@ public class Client extends Application{
         timeRemain = new Label("Time Remaining: " + time);
 
         question = new Label("Ques: ?");
+        question.setId("ques");
+        question.getStyleClass().add("question");
 
         option1 = new Label("A) ");
         //option1.textProperty().bind(new SimpleStringProperty("A)" + task.getAnswer_A()));
@@ -123,12 +141,66 @@ public class Client extends Application{
         buttons.restart();
 
 
+        option1.setOnMouseClicked(e -> {
+            //if (temp.getAnswer_A().equalsIgnoreCase(temp.getAnswer())){
+                buttonClip.play();
+
+                option1.setTextFill(Color.RED);
+                option2.setTextFill(Color.WHITE);
+                option3.setTextFill(Color.WHITE);
+                option4.setTextFill(Color.WHITE);
+                choice = temp.getAnswer_A();
+                //temp.setScore(10);
+            //}
+        });
+
+
+        option2.setOnMouseClicked(e -> {
+            //if (temp.getAnswer_A().equalsIgnoreCase(temp.getAnswer())){
+                buttonClip.play();
+                option2.setTextFill(Color.RED);
+                option1.setTextFill(Color.WHITE);
+                option3.setTextFill(Color.WHITE);
+                option4.setTextFill(Color.WHITE);
+                choice = temp.getAnswer_B();
+                //temp.setScore(10);
+                //countdown.interrupt();
+            //}
+        });
+
+
+        option3.setOnMouseClicked(e -> {
+            //if (temp.getAnswer_A().equalsIgnoreCase(temp.getAnswer())){
+                buttonClip.play();
+                option3.setTextFill(Color.RED);
+                option2.setTextFill(Color.WHITE);
+                option1.setTextFill(Color.WHITE);
+                option4.setTextFill(Color.WHITE);
+                choice = temp.getAnswer_C();
+                //temp.setScore(10);
+                //countdown.interrupt();
+            //}
+        });
+
+
+        option4.setOnMouseClicked(e -> {
+            //if (temp.getAnswer_A().equalsIgnoreCase(temp.getAnswer())){
+                buttonClip.play();
+                option4.setTextFill(Color.RED);
+                option2.setTextFill(Color.WHITE);
+                option3.setTextFill(Color.WHITE);
+                option1.setTextFill(Color.WHITE);
+                choice = temp.getAnswer_D();
+                //temp.setScore(10);
+                //countdown.interrupt();
+            //}
+        });
 
 
 
         buttonA.setOnAction(e -> {
             if (temp.getAnswer_A().equalsIgnoreCase(temp.getAnswer())){
-
+                buttonClip.play();
                 temp.setScore(10);
                 gui.setX(-1);
                 //countdown.interrupt();
@@ -137,18 +209,21 @@ public class Client extends Application{
 
         buttonB.setOnAction(e -> {
             if (temp.getAnswer_B().equalsIgnoreCase(temp.getAnswer())){
+                buttonClip.play();
                 temp.setScore(10);
             }
         });
 
         buttonC.setOnAction(e -> {
             if (temp.getAnswer_C().equalsIgnoreCase(temp.getAnswer())){
+                buttonClip.play();
                 temp.setScore(10);
             }
         });
 
         buttonD.setOnAction(e -> {
             if (temp.getAnswer_D().equalsIgnoreCase(temp.getAnswer())){
+                buttonClip.play();
                 temp.setScore(10);
             }
         });
@@ -156,11 +231,19 @@ public class Client extends Application{
 
 
         result = new Label();
-        quit = new Button("Quit");
-        quit.setOnAction(e -> {
+        quitLabel = new Label("Quit");
+        quitLabel.setOnMouseClicked(e -> {
             if(ConfirmBox.display("Quit", "Are you sure you want to quit?")){
-                AlertBox.display("Score", "Your final score is : ");
+                AlertBox.display("Score", "Your final score is : " + FinalScore );
                 window.close();
+            }
+        });
+
+        nextQ = new Label();
+        nextQ = new Label("Next Ques");
+        nextQ.setOnMouseClicked(e -> {
+            synchronized (temp) {
+                temp.notify();
             }
         });
 
@@ -174,17 +257,19 @@ public class Client extends Application{
         GridPane.setConstraints(option3, 0, 5);
         GridPane.setConstraints(option4, 0, 6);
 
-        GridPane.setConstraints(buttonA, 1, 3);
-        GridPane.setConstraints(buttonB, 1, 4);
-        GridPane.setConstraints(buttonC, 1, 5);
-        GridPane.setConstraints(buttonD, 1, 6);
-        GridPane.setConstraints(result, 1, 7);
-        GridPane.setConstraints(quit, 0, 8);
+        //GridPane.setConstraints(buttonA, 1, 3);
+        //GridPane.setConstraints(buttonB, 1, 4);
+        //GridPane.setConstraints(buttonC, 1, 5);
+        //GridPane.setConstraints(buttonD, 1, 6);
+        //GridPane.setConstraints(result, 1, 7);
+        GridPane.setConstraints(nextQ, 0, 8);
+        GridPane.setConstraints(quitLabel, 0, 10);
 
-        grid.getChildren().addAll(ruleLabel, timeRemain, question, option1, option2, option3, option4, buttonA, buttonB, buttonC, buttonD, result, quit);
+        grid.getChildren().addAll(ruleLabel, timeRemain, question, option1, option2, option3, option4, result, nextQ, quitLabel);
 
         //grid.getChildren().addAll(ruleLabel, question, option1, buttonA);
-        gameScene = new Scene(grid,400,400);
+        gameScene = new Scene(grid,800,600);
+        gameScene.getStylesheets().addAll(this.getClass().getResource("TheStyles.css").toExternalForm());
         ////
 
         window.setScene(gameScene);
@@ -263,6 +348,18 @@ public class Client extends Application{
     }
 
 
+    private static void placement(String taskData) throws IOException {
+        try {
+            Scanner scanner = new Scanner(taskData);
+            scanner.next();
+            FinalScore = scanner.nextInt();
+            Place = scanner.nextInt();
+        } catch (Exception e) {
+            throw new IOException("Illegal data found while reading task information.");
+        }
+    }
+
+
     private static Task readTask(String taskData) throws IOException {
         try {
             Scanner scanner = new Scanner(taskData);
@@ -298,8 +395,18 @@ public class Client extends Application{
             BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             PrintWriter out = new PrintWriter(connection.getOutputStream());
             int x = 1;
+
+
+            String ScoreData = in.readLine();
+
+            if (ScoreData.startsWith(RESULT_PLACEMENT)){
+                placement(ScoreData);
+                System.out.println("Score :"+ FinalScore +"|| Place :"+ Place);
+            }
+
             while(true){
                 String line = in.readLine();
+
                 if(line == null){
                     throw new Exception("Connection closed unexpectedly");
                 }
@@ -313,7 +420,19 @@ public class Client extends Application{
                     shutdownCommandReceived = true;
                     break;
                 }
+                else if(line.startsWith(RESULT_PLACEMENT)){
+                    placement(line);
+                    System.out.println("Score :"+ FinalScore +"|| Place :"+ Place);
+                }
                 else if (line.startsWith(TASK_COMMAND)){
+
+                    ScoreData = in.readLine();
+
+                    if (ScoreData.startsWith(RESULT_PLACEMENT)){
+                        placement(ScoreData);
+                        System.out.println("Score :"+ FinalScore +"|| Place :"+ Place);
+                    }
+
                     Task task = readTask(line);
                     //setQuestion(task.getQuestion());
                     //task.compute();
@@ -321,10 +440,20 @@ public class Client extends Application{
                     temp = task;
 
                     gui = new GUIupdate();
-                    gui.update(temp, question, option1, option2, option3, option4, timeRemain);
+                    gui.update(temp, question, option1, option2, option3, option4, timeRemain,FinalScore,Place);
                     //gui.updatetimer(x);
                     // used to pause for 5 seconds
-                    Thread.sleep(9999);
+                    //Thread.sleep(9999);
+
+                    synchronized (temp) {
+
+                        temp.wait();
+                    }
+
+                    if (choice.equalsIgnoreCase(temp.getAnswer())){
+                        temp.setScore(10);
+                    }
+                    choice ="";
 
                     //test();
 //                    countdown = new Countdown();
@@ -340,6 +469,7 @@ public class Client extends Application{
 
                     out.println(writeResults(task));
                     out.flush();
+
                 }
                 else{
                     throw new Exception("Illegal command received.");
@@ -383,7 +513,6 @@ public class Client extends Application{
             test();
         }
     }
-
 
 
 

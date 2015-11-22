@@ -1,4 +1,3 @@
-
 import Questions.Questions;
 import Questions.SetUpGame;
 import Task.Task;
@@ -18,9 +17,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Server extends Application {
@@ -36,6 +33,7 @@ public class Server extends Application {
     private static final String SHUT_DOWN_COMMAND = "shutdown";
     private static final String TASK_COMMAND = "task";
     private static final String RESULTS_COMMAND = "results";
+    private static final String RESULT_PLACEMENT = "placement";
     private static int  taskCompleted;
 
     private static ConcurrentLinkedQueue<Task> tasks;
@@ -201,6 +199,8 @@ public class Server extends Application {
                     protected Void call() throws Exception {
 
                         ///////////////////////////////////////////////////////////
+                        addresses.clear();
+                        Arrays.fill(SCORES, 0);
                         networkAddress = tf.getText();
                         if (networkAddress.equals("") || !CheckString(networkAddress)) {
                             updateMessage("wrong ip");
@@ -265,6 +265,12 @@ public class Server extends Application {
 
                             //PrintResults(label);
 
+
+                            sendResults();
+
+
+
+
                         }
 
                         ////////////////////////////////////////////////////////////
@@ -281,7 +287,6 @@ public class Server extends Application {
     }
 
     private static String PrintResults(Label l) {
-        int size = addresses.size();
         Iterator<Integer> iter = addresses.iterator();
         String str = "";
         str += "=======> SCORES <=======\n";
@@ -291,6 +296,72 @@ public class Server extends Application {
             str += (networkAddress + j + ") " + SCORES[j]) + "\n";
         }
         return str;
+    }
+
+    private static int loc(ArrayList numbers,int val){
+        Collections.sort(numbers);
+        Iterator<Integer> iter = numbers.iterator();
+        int count = 1;
+        while (iter.hasNext()){
+            Integer I = iter.next();
+            if (SCORES[I] == val){
+                return count;
+            }else{
+                count++;
+            }
+        }
+      return -1;
+    }
+
+    private static void sendResults(){
+        System.out.println("Server sending results");
+        Iterator<Integer> iter = addresses.iterator();
+        while(iter.hasNext()){
+            Integer j = iter.next();
+            try {
+                Socket socket = new Socket(networkAddress+j, DEFAULT_PORT);
+                if (socket.isConnected()){
+                    try {
+                        PrintWriter out = new PrintWriter(socket.getOutputStream());
+                        StringBuffer buffer = new StringBuffer();
+                        buffer.append(RESULT_PLACEMENT);
+                        buffer.append(' ');
+                        buffer.append(SCORES[j]);
+                        buffer.append(' ');
+                        buffer.append(loc(addresses,SCORES[j]));
+                        buffer.append(' ');
+                        out.println(buffer.toString());
+                        out.flush();
+                        out.println(CLOSE_CONNECTION_COMMAND);
+                        out.flush();
+                    }catch(Exception e){
+
+                    }
+
+                }
+            } catch (Exception e) {
+                System.out.println("Not Connected to :" + networkAddress+j);
+            }
+        }
+    }
+
+
+    private static void sendResults(Socket socket, int num){
+        System.out.println("Server sending results");
+            try {
+                PrintWriter out = new PrintWriter(socket.getOutputStream());
+                StringBuffer buffer = new StringBuffer();
+                buffer.append(RESULT_PLACEMENT);
+                buffer.append(' ');
+                buffer.append(SCORES[num]);
+                buffer.append(' ');
+                buffer.append(loc(addresses,SCORES[num]));
+                buffer.append(' ');
+                out.println(buffer.toString());
+                out.flush();
+            }catch(Exception e){
+
+            }
     }
 
 
@@ -394,6 +465,8 @@ public class Server extends Application {
                 PrintWriter out = new PrintWriter(socket.getOutputStream());
                 BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
+                sendResults(socket,num);
+
                 currentTask = tasks.poll();
                 if (currentTask != null) {
                     String taskString = writeTask(currentTask);
@@ -401,6 +474,7 @@ public class Server extends Application {
                     out.flush();
                 }
                 while (currentTask != null) {
+                    sendResults(socket,num);
                     String resultsString = in.readLine();
                     if (resultsString == null) {
                         throw new IOException("Connection closed unexpectedly.");
@@ -408,6 +482,7 @@ public class Server extends Application {
                     if (!resultsString.startsWith(RESULTS_COMMAND)) {
                         throw new IOException("Illegal string received from worker");
                     }
+
                     nextTask = tasks.poll();
                     if (nextTask != null) {
                         String taskString = writeTask(nextTask);

@@ -1,0 +1,19 @@
+#pane {
+    -fx-background-image: url('/resources/image/blackboard-background.jpg');
+    -fx-background-size: 800 600;
+}
+
+
+
+
+.label {
+     -fx-font-family: ChalkDust;
+     -fx-font-size: 20px;
+     -fx-text-fill: white;
+ }
+
+ .label:active{
+     -fx-font-family: ChalkDust;
+     -fx-font-size: 20px;
+     -fx-text-fill: blue;
+ }

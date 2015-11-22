@@ -7,6 +7,7 @@ import javafx.scene.control.Label;
 public class GUIupdate {
 
     private static int x;
+    private static boolean quesSel = false;
 
 
     public void updateTime(Task temp, Label T) {
@@ -31,9 +32,12 @@ public class GUIupdate {
     }
 
 
-    public void update(Task temp, Label Q, Label A, Label B, Label C, Label D, Label T) {
+    public void update(Task temp, Label Q, Label A, Label B, Label C, Label D, Label T, int FinalScore,int Place) {
 
         x=10;
+
+        final int s = FinalScore;
+        final int p = Place;
 
         // Question thread
         Service<Void> question = new Service<Void>() {
@@ -60,7 +64,7 @@ public class GUIupdate {
                     @Override
                     protected Void call() throws Exception {
                         Thread.sleep(2000);
-                        updateMessage(temp.getAnswer_A());
+                        updateMessage("A) " + temp.getAnswer_A());
                         return null;
                     }
                 };
@@ -76,7 +80,7 @@ public class GUIupdate {
                     @Override
                     protected Void call() throws Exception {
                         Thread.sleep(2000);
-                        updateMessage(temp.getAnswer_B());
+                        updateMessage("B) " + temp.getAnswer_B());
                         return null;
                     }
                 };
@@ -91,7 +95,7 @@ public class GUIupdate {
                     @Override
                     protected Void call() throws Exception {
                         Thread.sleep(2000);
-                        updateMessage(temp.getAnswer_C());
+                        updateMessage("C) " + temp.getAnswer_C());
                         return null;
                     }
                 };
@@ -107,7 +111,7 @@ public class GUIupdate {
                     @Override
                     protected Void call() throws Exception {
                         Thread.sleep(2000);
-                        updateMessage(temp.getAnswer_D());
+                        updateMessage("D) " + temp.getAnswer_D());
                         return null;
 
                     }
@@ -126,14 +130,14 @@ public class GUIupdate {
                         int y = 10;
                         while (y > 0){
                             Thread.sleep(1000);
-                            updateMessage(""+y);
+                            updateMessage("Score:"+s+" Place:"+p+" time:"+y);
                             y--;
                         }
-//                        if (x==0){
-//                            synchronized (temp) {
-//                                temp.notify();
-//                            }
-//                        }
+                        if (!quesSel){
+                            synchronized (temp) {
+                                temp.notify();
+                            }
+                        }
 
                         return null;
                     }
