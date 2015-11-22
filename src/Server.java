@@ -106,9 +106,6 @@ public class Server extends Application {
         Label questiontext = new Label("Results");
         GridPane.setConstraints(questiontext, 0, 1);
 
-
-
-
         grid2.getChildren().addAll(button2,questiontext);
         scene2 = new Scene(grid2, 400, 200);
 
