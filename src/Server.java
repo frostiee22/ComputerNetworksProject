@@ -298,7 +298,7 @@ public class Server extends Application {
         return str;
     }
 
-    private static int loc(ArrayList numbers,int val){
+    private static int loc(ArrayList<Integer> numbers,int val){
         Collections.sort(numbers);
         Iterator<Integer> iter = numbers.iterator();
         int count = 1;

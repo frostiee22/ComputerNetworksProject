@@ -113,7 +113,6 @@ public class GUIupdate {
                         Thread.sleep(2000);
                         updateMessage("D) " + temp.getAnswer_D());
                         return null;
-
                     }
                 };
             }
@@ -138,7 +137,6 @@ public class GUIupdate {
                                 temp.notify();
                             }
                         }
-
                         return null;
                     }
                 };

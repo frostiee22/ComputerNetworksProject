@@ -18,15 +18,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Scanner;
-
-//import application.AlertBox;
 
 public class Client extends Application{
 
@@ -85,11 +80,11 @@ public class Client extends Application{
     public void start(Stage primaryStage) throws Exception {
         // TODO Auto-generated method stub
 
-        //AudioClip backgroundClip = new AudioClip(getClass().getResource("/resources/sound/click.wav").toExternalForm());
-        AudioClip buttonClip = new AudioClip(getClass().getResource("/resources/sound/click.wav").toExternalForm());
 
-        Font.loadFont(getClass().getResource("/resources/font/ChalkDust.TTF").toExternalForm(), 10);
 
+            AudioClip backgroundClip = new AudioClip(getClass().getResource("./resources/sound/click.wav").toExternalForm());
+            AudioClip buttonClip = new AudioClip(getClass().getResource("./resources/sound/click.wav").toExternalForm());
+            Font.loadFont(getClass().getResource("./resources/font/ChalkDust.TTF").toExternalForm(), 10);
 
         window = primaryStage;
         window.setTitle("Client Application");
@@ -111,34 +106,15 @@ public class Client extends Application{
         question.getStyleClass().add("question");
 
         option1 = new Label("A) ");
-        //option1.textProperty().bind(new SimpleStringProperty("A)" + task.getAnswer_A()));
         option2 = new Label("B) ");
-        //option2.textProperty().bind(new SimpleStringProperty("B)" + task.getAnswer_B()));
         option3 = new Label("C) ");
-        //option3.textProperty().bind(new SimpleStringProperty("C)" + task.getAnswer_C()));
         option4 = new Label("D) ");
-        //option4.textProperty().bind(new SimpleStringProperty("D)" + task.getAnswer_D()));
 
         buttonA = new Button("Select");
         buttonB = new Button("Select");
         buttonC = new Button("Select");
         buttonD = new Button("Select");
 
-
-        Service<Void> buttons = new Service<Void>() {
-            @Override
-            protected javafx.concurrent.Task<Void> createTask() {
-                return new javafx.concurrent.Task<Void>() {
-                    @Override
-                    protected Void call() throws Exception {
-                        Thread.sleep(500);
-                        return null;
-                    }
-                };
-            }
-        };
-
-        buttons.restart();
 
 
         option1.setOnMouseClicked(e -> {
@@ -269,8 +245,8 @@ public class Client extends Application{
 
         //grid.getChildren().addAll(ruleLabel, question, option1, buttonA);
         gameScene = new Scene(grid,800,600);
-        gameScene.getStylesheets().addAll(this.getClass().getResource("TheStyles.css").toExternalForm());
-        ////
+        gameScene.getStylesheets().addAll(this.getClass().getResource("./TheStyles.css").toExternalForm());
+
 
         window.setScene(gameScene);
 
@@ -290,21 +266,7 @@ public class Client extends Application{
                 };
             }
         };
-
-
-//        backgroundThread1.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-//            @Override
-//            public void handle(WorkerStateEvent event) {
-//                System.out.println("Done!  1");
-//            }
-//        });
-
         backgroundThread1.restart();
-
-
-
-
-
     }
 
 
