@@ -12,6 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import lib.GenBlockList;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -36,6 +37,8 @@ public class Server extends Application {
     private static final String RESULTS_COMMAND = "results";
     private static final String RESULT_PLACEMENT = "placement";
     private static int taskCompleted;
+
+    private static GenBlockList blockList;
 
     private static ConcurrentLinkedQueue<Task> tasks;
 
@@ -234,8 +237,12 @@ public class Server extends Application {
                             WorkerConnection[] workers = new WorkerConnection[amt + 2];
                             int inc = 0;
                             for (int i = startip; i <= amt; i++) {
-                                workers[inc] = new WorkerConnection(inc + 1, i, networkAddress + i, DEFAULT_PORT);
-                                inc++;
+                                if (blockList.isblocked(networkAddress+i)){
+                                    System.out.println("Client " + networkAddress+i+" blocked!");
+                                }else {
+                                    workers[inc] = new WorkerConnection(inc + 1, i, networkAddress + i, DEFAULT_PORT);
+                                    inc++;
+                                }
                             }
 
                             for (int i = 0; i < inc; i++) {
@@ -354,6 +361,14 @@ public class Server extends Application {
 
     private static void createJob(String topic) {
         SetUpGame Game;
+        GenBlockList blockList;
+
+        try{
+            blockList = new GenBlockList();
+        }catch (Exception e){
+
+        }
+
         try {
             Game = new SetUpGame(topic);
             tasks = new ConcurrentLinkedQueue<Task>();

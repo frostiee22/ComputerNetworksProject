@@ -8,40 +8,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="reduce amt of files">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/Server/Questions/Questions.txt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/resources/TheStyles.css" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/artifacts/Client/EducationalGame.jar" afterPath="$PROJECT_DIR$/out/artifacts/Client/EducationalGame.jar" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/artifacts/Server/JavaFXApp.jar" afterPath="$PROJECT_DIR$/out/artifacts/Server/JavaFXApp.jar" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/EducationalGame/Client$1$1.class" afterPath="$PROJECT_DIR$/out/production/EducationalGame/Client$1$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/EducationalGame/Client$1.class" afterPath="$PROJECT_DIR$/out/production/EducationalGame/Client$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/EducationalGame/Client$Countdown.class" afterPath="$PROJECT_DIR$/out/production/EducationalGame/Client$Countdown.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/EducationalGame/Client.class" afterPath="$PROJECT_DIR$/out/production/EducationalGame/Client.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/EducationalGame/GUIwindows/AlertBox.class" afterPath="$PROJECT_DIR$/out/production/EducationalGame/GUIwindows/AlertBox.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/EducationalGame/GUIwindows/ConfirmBox.class" afterPath="$PROJECT_DIR$/out/production/EducationalGame/GUIwindows/ConfirmBox.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/EducationalGame/Server$1$1$1.class" afterPath="$PROJECT_DIR$/out/production/EducationalGame/Server$1$1$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/EducationalGame/Server$1$1.class" afterPath="$PROJECT_DIR$/out/production/EducationalGame/Server$1$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/EducationalGame/Server$1.class" afterPath="$PROJECT_DIR$/out/production/EducationalGame/Server$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/EducationalGame/Server$2$1.class" afterPath="$PROJECT_DIR$/out/production/EducationalGame/Server$2$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/EducationalGame/Server$2.class" afterPath="$PROJECT_DIR$/out/production/EducationalGame/Server$2.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/EducationalGame/Server$3$1.class" afterPath="$PROJECT_DIR$/out/production/EducationalGame/Server$3$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/EducationalGame/Server$3.class" afterPath="$PROJECT_DIR$/out/production/EducationalGame/Server$3.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/EducationalGame/Server$WorkerConnection.class" afterPath="$PROJECT_DIR$/out/production/EducationalGame/Server$WorkerConnection.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/EducationalGame/Server.class" afterPath="$PROJECT_DIR$/out/production/EducationalGame/Server.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/artifacts/Client/EducationalGame.jnlp" afterPath="$PROJECT_DIR$/out/artifacts/Client/EducationalGame.jnlp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/artifacts/Server/JavaFXApp.jnlp" afterPath="$PROJECT_DIR$/out/artifacts/Server/JavaFXApp.jnlp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/EducationalGame/Questions/default.txt" afterPath="$PROJECT_DIR$/out/production/EducationalGame/Questions/default.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/EducationalGame/Questions/math.txt" afterPath="$PROJECT_DIR$/out/production/EducationalGame/Questions/math.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/EducationalGame/Questions/network.txt" afterPath="$PROJECT_DIR$/out/production/EducationalGame/Questions/network.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/EducationalGame/TheStyles.css" afterPath="$PROJECT_DIR$/out/production/EducationalGame/TheStyles.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Client.java" afterPath="$PROJECT_DIR$/src/Client.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/GUIwindows/AlertBox.java" afterPath="$PROJECT_DIR$/src/GUIwindows/AlertBox.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/GUIwindows/ConfirmBox.java" afterPath="$PROJECT_DIR$/src/GUIwindows/ConfirmBox.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Questions/Questions.java" afterPath="$PROJECT_DIR$/src/Questions/Questions.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Questions/SetUpGame.java" afterPath="$PROJECT_DIR$/src/Questions/SetUpGame.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Questions/default.txt" afterPath="$PROJECT_DIR$/src/Questions/default.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Questions/math.txt" afterPath="$PROJECT_DIR$/src/Questions/math.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Questions/network.txt" afterPath="$PROJECT_DIR$/src/Questions/network.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Server.java" afterPath="$PROJECT_DIR$/src/Server.java" />
     </list>
     <ignored path="JavaFxApplication.iws" />
@@ -110,8 +76,18 @@
       <file leaf-file-name="Server.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Server.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="1.4983498">
-              <caret line="292" column="31" selection-start-line="292" selection-start-column="31" selection-end-line="292" selection-end-column="31" />
+            <state vertical-scroll-proportion="0.5610561">
+              <caret line="247" column="59" selection-start-line="247" selection-start-column="59" selection-end-line="247" selection-end-column="59" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="GenBlockList.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/lib/GenBlockList.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="6" column="13" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
               <folding />
             </state>
           </provider>
@@ -169,7 +145,7 @@
   <component name="ProjectFrameBounds">
     <option name="x" value="-8" />
     <option name="y" value="-8" />
-    <option name="width" value="1382" />
+    <option name="width" value="1378" />
     <option name="height" value="744" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
@@ -202,6 +178,9 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
+      <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -230,7 +209,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="out" />
+              <option name="myItemId" value="src" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -244,45 +223,16 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="out" />
+              <option name="myItemId" value="src" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="artifacts" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Server" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ComputerNetworksProject" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ComputerNetworksProject" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="out" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="artifacts" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Client" />
+              <option name="myItemId" value="lib" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -862,6 +812,7 @@
       <workItem from="1448246435387" duration="3992000" />
       <workItem from="1448277056214" duration="9662000" />
       <workItem from="1448327742239" duration="369000" />
+      <workItem from="1448360373077" duration="474000" />
     </task>
     <task id="LOCAL-00001" summary="zdjhzf">
       <created>1448145572016</created>
@@ -891,11 +842,11 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="53493000" />
+    <option name="totallyTimeSpent" value="53967000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
-    <editor active="false" />
+    <frame x="-8" y="-8" width="1378" height="744" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -906,7 +857,7 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.329653" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15739386" sideWeight="0.6703755" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15712188" sideWeight="0.6703755" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -986,6 +937,24 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/Server.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Client.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="386" column="0" selection-start-line="386" selection-start-column="0" selection-end-line="386" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/Server.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1354,14 +1323,21 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.33663365">
           <caret line="12" column="0" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lib/GenBlockList.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="6" column="13" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Server.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.4983498">
-          <caret line="292" column="31" selection-start-line="292" selection-start-column="31" selection-end-line="292" selection-end-column="31" />
+        <state vertical-scroll-proportion="0.5610561">
+          <caret line="247" column="59" selection-start-line="247" selection-start-column="59" selection-end-line="247" selection-end-column="59" />
           <folding />
         </state>
       </provider>
