@@ -8,6 +8,7 @@ public class BlockIP {
 
     public BlockIP(String IPAddress){
         this.IP = IPAddress;
+        this.date = getDate();
     }
 
     public String getIP() {

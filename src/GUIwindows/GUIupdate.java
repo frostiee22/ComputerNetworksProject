@@ -32,7 +32,7 @@ public class GUIupdate {
     }
 
 
-    public void update(Task temp, Label Q, Label A, Label B, Label C, Label D, Label T, int FinalScore,int Place) {
+    public void update(Task temp, Label Q, Label A, Label B, Label C, Label D, Label T, int FinalScore,int Place, String str) {
 
         x=10;
 
@@ -127,11 +127,16 @@ public class GUIupdate {
                     protected Void call() throws Exception {
                        // private static int x = 10;
                         int y = 10;
-                        while (y > 0){
-                            Thread.sleep(1000);
-                            updateMessage("Score:"+s+" Place:"+p+" time:"+y);
-                            y--;
+                        if (str.equalsIgnoreCase("")) {
+                            while (y > 0) {
+                                Thread.sleep(1000);
+                                updateMessage("Score:" + s + " Place:" + p + " time:" + y);
+                                y--;
+                            }
+                        }else{
+                            updateMessage(str + "Score: " + s + " Place: " + p);
                         }
+
                         if (!quesSel){
                             synchronized (temp) {
                                 temp.notify();

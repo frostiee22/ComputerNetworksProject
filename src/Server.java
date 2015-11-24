@@ -38,8 +38,10 @@ public class Server extends Application {
     private static final String RESULT_PLACEMENT = "placement";
     private static int taskCompleted;
 
+    // has all the blocked clients ipaddress
     private static GenBlockList blockList;
 
+    // queue of task to be send to a client for processiong
     private static ConcurrentLinkedQueue<Task> tasks;
 
     private static int[] SCORES = new int[257];
@@ -361,8 +363,6 @@ public class Server extends Application {
 
     private static void createJob(String topic) {
         SetUpGame Game;
-        GenBlockList blockList;
-
         try{
             blockList = new GenBlockList();
         }catch (Exception e){
@@ -445,7 +445,6 @@ public class Server extends Application {
 
         int id;
         int num;
-        Socket socket;
         int port;
         String ip;
 

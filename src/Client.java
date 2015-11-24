@@ -93,7 +93,7 @@ public class Client extends Application{
             AudioClip nameClip = new AudioClip(getClass().getResource("./resources/sound/save.wav").toExternalForm());
 
 
-            Font.loadFont(getClass().getResource("./resources/font/ChalkDust.TTF").toExternalForm(), 10);
+            Font.loadFont(getClass().getResource("./resources/font/ChalkDust.ttf").toExternalForm(), 10);
 
 
 
@@ -368,7 +368,8 @@ public class Client extends Application{
                 }
                 if(line.startsWith(CLOSE_CONNECTION_COMMAND)){
                     System.out.println("Received closed command.");
-                    gui.update(temp, question, option1, option2, option3, option4, timeRemain,FinalScore,Place);
+
+                    gui.update(temp, question, option1, option2, option3, option4, timeRemain,FinalScore,Place,"Game End: ");
                     popUp = true;
                     break;
                 }
@@ -395,7 +396,7 @@ public class Client extends Application{
                     temp = task;
 
 //                    GUIupdate gui = new GUIupdate();
-                    gui.update(temp, question, option1, option2, option3, option4, timeRemain,FinalScore,Place);
+                    gui.update(temp, question, option1, option2, option3, option4, timeRemain,FinalScore,Place,"");
                     choice ="";
                     option1.setTextFill(Color.WHITE);
                     option2.setTextFill(Color.WHITE);
