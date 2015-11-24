@@ -3,17 +3,49 @@
     -fx-background-size: 800 600;
 }
 
-
-
-
 .label {
      -fx-font-family: ChalkDust;
      -fx-font-size: 20px;
      -fx-text-fill: white;
  }
 
- .label:active{
+ #bLabel:hover{
      -fx-font-family: ChalkDust;
      -fx-font-size: 20px;
      -fx-text-fill: blue;
+ }
+  #rLabel:hover{
+      -fx-font-family: ChalkDust;
+      -fx-font-size: 20px;
+      -fx-text-fill: red;
+  }
+
+#nameInput {
+    -fx-font-family: ChalkDust;
+    -fx-boarder: none;
+    -fx-background-color: #a9a9a9 , white , white;
+    -fx-background-insets: 0 -1 -1 -1, 0 0 0 0, 0 -1 3 -1;
+    -fx-text-fill: red;
+ }
+
+ .button {
+    -fx-font-family: ChalkDust;
+    -fx-boarder: none;
+    -fx-background-color: #a9a9a9 , white , white;
+    -fx-background-insets: 0 -1 -1 -1, 0 0 0 0, 0 -1 3 -1;
+ }
+
+ .button:hover{
+     -fx-font-family: ChalkDust;
+     -fx-boarder: none;
+     -fx-background-color: #a9a9a9 , white , white;
+     -fx-background-insets: 0 -1 -1 -1, 0 0 0 0, 0 -1 3 -1;
+     -fx-text-fill: blue;
+  }
+  #rButton:hover{
+    -fx-text-fill: red;
+  }
+
+ #layout {
+    -fx-background-color: BLACK;
  }

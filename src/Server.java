@@ -35,7 +35,7 @@ public class Server extends Application {
     private static final String TASK_COMMAND = "task";
     private static final String RESULTS_COMMAND = "results";
     private static final String RESULT_PLACEMENT = "placement";
-    private static int  taskCompleted;
+    private static int taskCompleted;
 
     private static ConcurrentLinkedQueue<Task> tasks;
 
@@ -91,8 +91,6 @@ public class Server extends Application {
         GridPane.setConstraints(end, 2, 1);
 
 
-
-
         GridPane grid2 = new GridPane();
         grid2.setPadding(new Insets(10, 10, 10, 10));
         grid2.setVgap(8);
@@ -105,13 +103,13 @@ public class Server extends Application {
         Label questiontext = new Label("Results");
         GridPane.setConstraints(questiontext, 0, 1);
 
-        grid2.getChildren().addAll(button2,questiontext);
+        grid2.getChildren().addAll(button2, questiontext);
         scene2 = new Scene(grid2, 400, 200);
 
 
         ChoiceBox<String> choiceBox = new ChoiceBox<>();
         choiceBox.setValue("default");
-        choiceBox.getItems().addAll("default","network","math");
+        choiceBox.getItems().addAll("default", "network", "math");
         GridPane.setConstraints(choiceBox, 0, 4);
 
         // error messages
@@ -120,24 +118,24 @@ public class Server extends Application {
 
         //button
         Button startServer = new Button("Launch Server");
-        GridPane.setConstraints(startServer, 0, 5 );
-        startServer.setOnAction(e -> ServerRun(ipInput, start, end, questiontext,error,choiceBox));
+        GridPane.setConstraints(startServer, 0, 5);
+        startServer.setOnAction(e -> ServerRun(ipInput, start, end, questiontext, error, choiceBox));
 
         //button
         Button Results = new Button("View Results");
         GridPane.setConstraints(Results, 1, 5);
         Results.setOnAction(e -> window.setScene(scene2));
 
-        grid.getChildren().addAll(ipLabel, ipInput, startIPlabel, start, endIPlabel, end,choiceBox, startServer,Results,error);
+        grid.getChildren().addAll(ipLabel, ipInput, startIPlabel, start, endIPlabel, end, choiceBox, startServer, Results, error);
 
-        scene = new Scene(grid, 400, 150);
+        scene = new Scene(grid, 400, 180);
         window.setScene(scene);
 
         window.show();
 
     }
 
-    public static void ServerRun(TextField tf, TextField start, TextField end, Label label,Label error ,ChoiceBox CB){
+    public static void ServerRun(TextField tf, TextField start, TextField end, Label label, Label error, ChoiceBox CB) {
         // Application thread
         Service<Void> application = new Service<Void>() {
             @Override
@@ -145,18 +143,16 @@ public class Server extends Application {
                 return new javafx.concurrent.Task<Void>() {
                     @Override
                     protected Void call() throws Exception {
-                        Platform.runLater(new Runnable(){
-                            public void run(){
-                                LaunchServer(tf, start, end, error,CB);
+                        Platform.runLater(new Runnable() {
+                            public void run() {
+                                LaunchServer(tf, start, end, error, CB);
                             }
                         });
                         return null;
                     }
                 };
-
             }
         };
-
 
 
         // Results thread
@@ -166,7 +162,7 @@ public class Server extends Application {
                 return new javafx.concurrent.Task<Void>() {
                     @Override
                     protected Void call() throws Exception {
-                        while(true) {
+                        while (true) {
                             updateMessage(PrintResults(label));
                             Thread.sleep(1000);
                         }
@@ -194,7 +190,7 @@ public class Server extends Application {
     }
 
 
-    public static void LaunchServer(TextField tf, TextField start, TextField end, Label error,ChoiceBox<String> CB) {
+    public static void LaunchServer(TextField tf, TextField start, TextField end, Label error, ChoiceBox<String> CB) {
         // Results thread
         Service<Void> errorThread = new Service<Void>() {
             @Override
@@ -219,14 +215,14 @@ public class Server extends Application {
                             int startip, endip;
                             try {
                                 startip = Integer.parseInt(start.getText());
-                            }catch(NumberFormatException e){
+                            } catch (NumberFormatException e) {
                                 startip = 1;
                                 updateMessage("Incorrect Start address");
                                 Thread.sleep(500);
                             }
-                            try{
+                            try {
                                 endip = Integer.parseInt(end.getText());
-                            }catch(NumberFormatException e){
+                            } catch (NumberFormatException e) {
                                 endip = 254;
                                 updateMessage("Incorrect End address");
                                 Thread.sleep(500);
@@ -238,16 +234,8 @@ public class Server extends Application {
                             WorkerConnection[] workers = new WorkerConnection[amt + 2];
                             int inc = 0;
                             for (int i = startip; i <= amt; i++) {
-                                try {
-                                    Socket socket = new Socket(networkAddress+i, DEFAULT_PORT);
-                                    if (socket.isConnected()){
-                                        System.out.println("connected to : " + networkAddress + i);
-                                        workers[inc] = new WorkerConnection(inc + 1, i,socket);
-                                        inc++;
-                                    }
-                                } catch (Exception e) {
-                                    System.out.println("Not Connected to :" + networkAddress+i);
-                                }
+                                workers[inc] = new WorkerConnection(inc + 1, i, networkAddress + i, DEFAULT_PORT);
+                                inc++;
                             }
 
                             for (int i = 0; i < inc; i++) {
@@ -274,12 +262,10 @@ public class Server extends Application {
                             sendResults();
 
 
-
-
                         }
 
                         ////////////////////////////////////////////////////////////
-                          return null;
+                        return null;
 
                     }
                 };
@@ -296,36 +282,32 @@ public class Server extends Application {
         String str = "";
         str += "=======> SCORES <=======\n";
 
-        while(iter.hasNext()){
+        while (iter.hasNext()) {
             Integer j = iter.next();
             str += (networkAddress + j + ") " + SCORES[j]) + "\n";
         }
         return str;
     }
 
-    private static int loc(ArrayList<Integer> numbers,int val){
-        Collections.sort(numbers);
-        Iterator<Integer> iter = numbers.iterator();
-        int count = 1;
-        while (iter.hasNext()){
-            Integer I = iter.next();
-            if (SCORES[I] == val){
-                return count;
-            }else{
-                count++;
-            }
+    private static int loc(int val) {
+        int[] temp = SCORES.clone();
+        Arrays.sort(temp);
+        int placement = 1;
+        for (int i=temp.length-1;i >= 0;i--){
+            if (temp[i] == val) return placement;
+            placement++;
         }
-      return -1;
+        return -1;
     }
 
-    private static void sendResults(){
+    private static void sendResults() {
         System.out.println("Server sending results");
         Iterator<Integer> iter = addresses.iterator();
-        while(iter.hasNext()){
+        while (iter.hasNext()) {
             Integer j = iter.next();
             try {
-                Socket socket = new Socket(networkAddress+j, DEFAULT_PORT);
-                if (socket.isConnected()){
+                Socket socket = new Socket(networkAddress + j, DEFAULT_PORT);
+                if (socket.isConnected()) {
                     try {
                         PrintWriter out = new PrintWriter(socket.getOutputStream());
                         StringBuffer buffer = new StringBuffer();
@@ -333,40 +315,40 @@ public class Server extends Application {
                         buffer.append(' ');
                         buffer.append(SCORES[j]);
                         buffer.append(' ');
-                        buffer.append(loc(addresses,SCORES[j]));
+                        buffer.append(loc(SCORES[j]));
                         buffer.append(' ');
                         out.println(buffer.toString());
                         out.flush();
                         out.println(CLOSE_CONNECTION_COMMAND);
                         out.flush();
-                    }catch(Exception e){
+                    } catch (Exception e) {
 
                     }
 
                 }
             } catch (Exception e) {
-                System.out.println("Not Connected to :" + networkAddress+j);
+                System.out.println("Not Connected to :" + networkAddress + j);
             }
         }
     }
 
 
-    private static void sendResults(Socket socket, int num){
+    private static void sendResults(Socket socket, int num) {
         System.out.println("Server sending results");
-            try {
-                PrintWriter out = new PrintWriter(socket.getOutputStream());
-                StringBuffer buffer = new StringBuffer();
-                buffer.append(RESULT_PLACEMENT);
-                buffer.append(' ');
-                buffer.append(SCORES[num]);
-                buffer.append(' ');
-                buffer.append(loc(addresses,SCORES[num]));
-                buffer.append(' ');
-                out.println(buffer.toString());
-                out.flush();
-            }catch(Exception e){
+        try {
+            PrintWriter out = new PrintWriter(socket.getOutputStream());
+            StringBuffer buffer = new StringBuffer();
+            buffer.append(RESULT_PLACEMENT);
+            buffer.append(' ');
+            buffer.append(SCORES[num]);
+            buffer.append(' ');
+            buffer.append(loc(SCORES[num]));
+            buffer.append(' ');
+            out.println(buffer.toString());
+            out.flush();
+        } catch (Exception e) {
 
-            }
+        }
     }
 
 
@@ -449,18 +431,29 @@ public class Server extends Application {
         int id;
         int num;
         Socket socket;
+        int port;
+        String ip;
 
 
-        WorkerConnection(int id, int num, Socket socket ) {
+        WorkerConnection(int id, int num, String ip, int port) {
             this.id = id;
             this.num = num;
-            this.socket = socket;
+            this.ip = ip;
+            this.port = port;
             start();
         }
 
         public void run() {
             int taskCompleted = 0;
-            //Socket socket;
+
+
+            Socket socket;
+            try {
+                socket = new Socket(ip, port);
+                System.out.println("connected to : " + ip);
+            } catch (Exception e) {
+                return;
+            }
             addresses.add(num);
 
             Task currentTask = null;
@@ -470,7 +463,7 @@ public class Server extends Application {
                 PrintWriter out = new PrintWriter(socket.getOutputStream());
                 BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-                sendResults(socket,num);
+                sendResults(socket, num);
 
                 currentTask = tasks.poll();
                 if (currentTask != null) {
@@ -479,7 +472,7 @@ public class Server extends Application {
                     out.flush();
                 }
                 while (currentTask != null) {
-                    sendResults(socket,num);
+                    sendResults(socket, num);
                     String resultsString = in.readLine();
                     if (resultsString == null) {
                         throw new IOException("Connection closed unexpectedly.");
@@ -507,7 +500,7 @@ public class Server extends Application {
                 out.flush();
 
             } catch (Exception e) {
-                System.out.println("Client " + networkAddress+num + " ending after completing " +
+                System.out.println("Client " + networkAddress + num + " ending after completing " +
                         taskCompleted + " task");
                 System.out.println("   Error: " + e);
                 e.printStackTrace();
@@ -520,7 +513,7 @@ public class Server extends Application {
                     reassignTask(nextTask);
                 }
             } finally {
-                System.out.println("Client " + networkAddress+num + " ending after completing " + taskCompleted + " tasks");
+                System.out.println("Client " + networkAddress + num + " ending after completing " + taskCompleted + " tasks");
                 try {
                     socket.close();
                 } catch (Exception e) {

@@ -9,16 +9,24 @@ import Task.Task;
 import javafx.application.Application;
 import javafx.concurrent.Service;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.ImageCursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Scanner;
@@ -26,11 +34,12 @@ import java.util.Scanner;
 public class Client extends Application{
 
     Stage window;
-    Scene scene, gameScene;
+    Scene welcomeScene, gameScene;
 
-    int Qnum = 1;
 
+    static String clchange;
     static String choice;
+    static Label nameLabel;
     static Label ruleLabel;
     static Label question;
     static Label option1;
@@ -41,15 +50,9 @@ public class Client extends Application{
     static Label timeRemain;
     static Label quitLabel;
     static Label nextQ;
-    static int time = 10;
-    static Button buttonA, buttonB, buttonC, buttonD, quit;
 
-    String ans;
-
-    private Service<Void> backgroundThread1;
     private static Task temp = new Task();
-    private static Countdown countdown = new Countdown();
-    private static GUIupdate gui = new GUIupdate();
+    //private static Countdown countdown = new Countdown();
 
 
     private static final int DEFAULT_PORT = 13572;
@@ -81,13 +84,61 @@ public class Client extends Application{
         // TODO Auto-generated method stub
 
 
-
             AudioClip backgroundClip = new AudioClip(getClass().getResource("./resources/sound/click.wav").toExternalForm());
             AudioClip buttonClip = new AudioClip(getClass().getResource("./resources/sound/click.wav").toExternalForm());
+            AudioClip quitClip = new AudioClip(getClass().getResource("./resources/sound/quit.wav").toExternalForm());
+            AudioClip noClip = new AudioClip(getClass().getResource("./resources/sound/positive.wav").toExternalForm());
+            AudioClip yesClip = new AudioClip(getClass().getResource("./resources/sound/negative.wav").toExternalForm());
+            AudioClip exitClip = new AudioClip(getClass().getResource("./resources/sound/negative_2.wav").toExternalForm());
+            AudioClip nameClip = new AudioClip(getClass().getResource("./resources/sound/save.wav").toExternalForm());
+
+
             Font.loadFont(getClass().getResource("./resources/font/ChalkDust.TTF").toExternalForm(), 10);
+
+
 
         window = primaryStage;
         window.setTitle("Client Application");
+
+        /// scene 1
+        GridPane g = new GridPane();
+        g.setId("pane");
+        g.setAlignment(Pos.CENTER);
+        g.setVgap(18);
+        g.setHgap(15);
+
+        nameLabel = new Label("NAME: ");
+        Label label = new Label("NAME: ");
+        Button valName = new Button("ENTER");
+        TextField nameInput = new TextField();
+        nameInput.setId("nameInput");
+        nameInput.setOnKeyPressed(e -> {
+            buttonClip.play();
+            if(e.getCode().equals(KeyCode.ENTER)){
+                nameLabel.setText("Player: " + nameInput.getText());
+                nameClip.play();
+                window.setScene(gameScene);
+            }
+        });
+        valName.setOnAction(e -> {
+            nameLabel.setText("Player: " + nameInput.getText());
+            nameClip.play();
+            window.setScene(gameScene);
+        });
+
+        GridPane.setConstraints(label, 0, 0);
+        GridPane.setConstraints(nameInput, 1, 0);
+        GridPane.setConstraints(valName, 1, 1);
+        g.getChildren().addAll(label, nameInput, valName);
+        welcomeScene = new Scene(g,800,600);
+        welcomeScene.getStylesheets().addAll(this.getClass().getResource("./TheStyles.css").toExternalForm());
+
+        Image image = new Image("./resources/cursor/cursor_chalk.png");
+
+        welcomeScene.setCursor(new ImageCursor(image));
+
+
+        /// Scene 1
 
 
         //// Scene 2
@@ -96,12 +147,11 @@ public class Client extends Application{
         grid.setPadding(new Insets(50, 50, 50, 50));
         grid.setVgap(8);
         grid.setHgap(10);
+
         ruleLabel = new Label("Please select a choice: ");
+        timeRemain = new Label("");
 
-
-        timeRemain = new Label("Time Remaining: " + time);
-
-        question = new Label("Ques: ?");
+        question = new Label("Please Wait for the server to start the game...");
         question.setId("ques");
         question.getStyleClass().add("question");
 
@@ -110,151 +160,92 @@ public class Client extends Application{
         option3 = new Label("C) ");
         option4 = new Label("D) ");
 
-        buttonA = new Button("Select");
-        buttonB = new Button("Select");
-        buttonC = new Button("Select");
-        buttonD = new Button("Select");
-
-
-
         option1.setOnMouseClicked(e -> {
-            //if (temp.getAnswer_A().equalsIgnoreCase(temp.getAnswer())){
                 buttonClip.play();
-
-                option1.setTextFill(Color.RED);
+                option1.setTextFill(Color.YELLOW);
                 option2.setTextFill(Color.WHITE);
                 option3.setTextFill(Color.WHITE);
                 option4.setTextFill(Color.WHITE);
                 choice = temp.getAnswer_A();
-                //temp.setScore(10);
-            //}
         });
 
-
         option2.setOnMouseClicked(e -> {
-            //if (temp.getAnswer_A().equalsIgnoreCase(temp.getAnswer())){
                 buttonClip.play();
-                option2.setTextFill(Color.RED);
+                option2.setTextFill(Color.YELLOW);
                 option1.setTextFill(Color.WHITE);
                 option3.setTextFill(Color.WHITE);
                 option4.setTextFill(Color.WHITE);
                 choice = temp.getAnswer_B();
-                //temp.setScore(10);
-                //countdown.interrupt();
-            //}
         });
 
-
         option3.setOnMouseClicked(e -> {
-            //if (temp.getAnswer_A().equalsIgnoreCase(temp.getAnswer())){
                 buttonClip.play();
-                option3.setTextFill(Color.RED);
+                option3.setTextFill(Color.YELLOW);
                 option2.setTextFill(Color.WHITE);
                 option1.setTextFill(Color.WHITE);
                 option4.setTextFill(Color.WHITE);
                 choice = temp.getAnswer_C();
-                //temp.setScore(10);
-                //countdown.interrupt();
-            //}
         });
 
-
         option4.setOnMouseClicked(e -> {
-            //if (temp.getAnswer_A().equalsIgnoreCase(temp.getAnswer())){
                 buttonClip.play();
-                option4.setTextFill(Color.RED);
+                option4.setTextFill(Color.YELLOW);
                 option2.setTextFill(Color.WHITE);
                 option3.setTextFill(Color.WHITE);
                 option1.setTextFill(Color.WHITE);
                 choice = temp.getAnswer_D();
-                //temp.setScore(10);
-                //countdown.interrupt();
-            //}
         });
-
-
-
-        buttonA.setOnAction(e -> {
-            if (temp.getAnswer_A().equalsIgnoreCase(temp.getAnswer())){
-                buttonClip.play();
-                temp.setScore(10);
-                gui.setX(-1);
-                //countdown.interrupt();
-            }
-        });
-
-        buttonB.setOnAction(e -> {
-            if (temp.getAnswer_B().equalsIgnoreCase(temp.getAnswer())){
-                buttonClip.play();
-                temp.setScore(10);
-            }
-        });
-
-        buttonC.setOnAction(e -> {
-            if (temp.getAnswer_C().equalsIgnoreCase(temp.getAnswer())){
-                buttonClip.play();
-                temp.setScore(10);
-            }
-        });
-
-        buttonD.setOnAction(e -> {
-            if (temp.getAnswer_D().equalsIgnoreCase(temp.getAnswer())){
-                buttonClip.play();
-                temp.setScore(10);
-            }
-        });
-
 
 
         result = new Label();
         quitLabel = new Label("Quit");
         quitLabel.setOnMouseClicked(e -> {
+            quitClip.play();
             if(ConfirmBox.display("Quit", "Are you sure you want to quit?")){
-                AlertBox.display("Score", "Your final score is : " + FinalScore );
+                yesClip.play();
+                AlertBox.display("Score", "Your final score is : " + FinalScore + "\nYou did not place in the game!");
+                exitClip.play();
                 window.close();
             }
+            noClip.play();
         });
 
-        nextQ = new Label();
         nextQ = new Label("Next Ques");
         nextQ.setOnMouseClicked(e -> {
+            buttonClip.play();
             synchronized (temp) {
                 temp.notify();
             }
         });
 
+        quitLabel.setId("rLabel");
+        nextQ.setId("bLabel");
 
-        GridPane.setConstraints(ruleLabel, 0, 0);
-        GridPane.setConstraints(timeRemain, 3, 0);
+        GridPane.setConstraints(nameLabel, 0, 0);
+        GridPane.setConstraints(timeRemain, 0, 1);
+        GridPane.setConstraints(ruleLabel, 0, 6);
+        GridPane.setConstraints(question, 0, 9);
+        GridPane.setConstraints(option1, 0, 11);
+        GridPane.setConstraints(option2, 0, 13);
+        GridPane.setConstraints(option3, 0, 15);
+        GridPane.setConstraints(option4, 0, 17);
+        GridPane.setConstraints(nextQ, 0, 20);
+        GridPane.setConstraints(quitLabel, 0, 30);
 
-        GridPane.setConstraints(question, 0, 1);
-        GridPane.setConstraints(option1, 0, 3);
-        GridPane.setConstraints(option2, 0, 4);
-        GridPane.setConstraints(option3, 0, 5);
-        GridPane.setConstraints(option4, 0, 6);
 
-        //GridPane.setConstraints(buttonA, 1, 3);
-        //GridPane.setConstraints(buttonB, 1, 4);
-        //GridPane.setConstraints(buttonC, 1, 5);
-        //GridPane.setConstraints(buttonD, 1, 6);
-        //GridPane.setConstraints(result, 1, 7);
-        GridPane.setConstraints(nextQ, 0, 8);
-        GridPane.setConstraints(quitLabel, 0, 10);
-
-        grid.getChildren().addAll(ruleLabel, timeRemain, question, option1, option2, option3, option4, result, nextQ, quitLabel);
-
-        //grid.getChildren().addAll(ruleLabel, question, option1, buttonA);
+        grid.getChildren().addAll(ruleLabel, timeRemain, question, option1, option2, option3, option4, result, nextQ, quitLabel, nameLabel);
         gameScene = new Scene(grid,800,600);
         gameScene.getStylesheets().addAll(this.getClass().getResource("./TheStyles.css").toExternalForm());
+        gameScene.setCursor(new ImageCursor(image, image.getWidth() / 2, image.getHeight() /2));
 
 
-        window.setScene(gameScene);
+        /// scene 2
 
-
+        window.setScene(welcomeScene);
         window.show();
 
 
-        backgroundThread1 = new Service<Void>() {
+        Service<Void> backgroundThread1 = new Service<Void>() {
             @Override
             protected javafx.concurrent.Task<Void> createTask() {
                 return new javafx.concurrent.Task<Void>() {
@@ -267,7 +258,10 @@ public class Client extends Application{
             }
         };
         backgroundThread1.restart();
+
     }
+
+
 
 
     public static void LaunchClient() {
@@ -358,7 +352,6 @@ public class Client extends Application{
             PrintWriter out = new PrintWriter(connection.getOutputStream());
             int x = 1;
 
-
             String ScoreData = in.readLine();
 
             if (ScoreData.startsWith(RESULT_PLACEMENT)){
@@ -367,6 +360,7 @@ public class Client extends Application{
             }
 
             while(true){
+                GUIupdate gui = new GUIupdate();
                 String line = in.readLine();
 
                 if(line == null){
@@ -374,6 +368,7 @@ public class Client extends Application{
                 }
                 if(line.startsWith(CLOSE_CONNECTION_COMMAND)){
                     System.out.println("Received closed command.");
+                    gui.update(temp, question, option1, option2, option3, option4, timeRemain,FinalScore,Place);
                     popUp = true;
                     break;
                 }
@@ -396,16 +391,16 @@ public class Client extends Application{
                     }
 
                     Task task = readTask(line);
-                    //setQuestion(task.getQuestion());
-                    //task.compute();
 
                     temp = task;
 
-                    gui = new GUIupdate();
+//                    GUIupdate gui = new GUIupdate();
                     gui.update(temp, question, option1, option2, option3, option4, timeRemain,FinalScore,Place);
-                    //gui.updatetimer(x);
-                    // used to pause for 5 seconds
-                    //Thread.sleep(9999);
+                    choice ="";
+                    option1.setTextFill(Color.WHITE);
+                    option2.setTextFill(Color.WHITE);
+                    option3.setTextFill(Color.WHITE);
+                    option4.setTextFill(Color.WHITE);
 
                     synchronized (temp) {
 
@@ -415,19 +410,6 @@ public class Client extends Application{
                     if (choice.equalsIgnoreCase(temp.getAnswer())){
                         temp.setScore(10);
                     }
-                    choice ="";
-
-                    //test();
-//                    countdown = new Countdown();
-                    //countdown.start();
-
-//                    synchronized (temp) {
-//
-//                        temp.wait();
-//                    }
-
-                    //test();
-
 
                     out.println(writeResults(task));
                     out.flush();
@@ -437,6 +419,7 @@ public class Client extends Application{
                     throw new Exception("Illegal command received.");
                 }
             }
+
         }catch (Exception e){
             System.out.println("Client connection closed error " + e);
         }
